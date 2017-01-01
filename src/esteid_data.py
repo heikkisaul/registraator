@@ -20,5 +20,5 @@ def esteid_data_parse(eidenv_raw_out):
     data_list.append(timestamp)
     return data_list
 
-print(esteid_data_parse(get_eid_data()))
+
 
