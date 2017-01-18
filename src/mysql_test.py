@@ -7,8 +7,8 @@ cursor = db.cursor()
 cursor.execute("SELECT VERSION()")
 data = cursor.fetchone()
 
-#cursor.execute("INSERT INTO STUDENTS(FIRST_NAME, LAST_NAME, ID_CODE) VALUES ('Henri', 'Saul', 36805300835)")
-#db.commit()
+cursor.execute("INSERT INTO STUDENTS(FIRST_NAME, LAST_NAME, ID_CODE) VALUES ('Henri', 'Saul', 3py)")
+db.commit()
 
 print(data)
 

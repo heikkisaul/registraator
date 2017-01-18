@@ -1,12 +1,15 @@
-import threading
-
-import esteid_data
+from multiprocessing import Pool
+import esteid_data as ed
 
 def rfid_placeholder(code):
+
     print(code)
 
-eid_t = threading.Thread(name='esteid_thread', target=esteid_data.get_eid_data)
-rfid_t = threading.Thread(name='rfid_thread', target=rfid_placeholder,args=("112344456",))
+pool = Pool(processes=30)
 
-eid_t.start()
-rfid_t.start()
+pool.apply(rfid_placeholder,args=("11111151515",))
+#pool.apply(ed.commit_data(ed.parse(ed.get_data())))
+pool.apply(ed.test_commit)
+pool.apply(rfid_placeholder,args=("22551515",))
+
+
