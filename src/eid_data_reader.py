@@ -1,5 +1,3 @@
-
-
 import subprocess
 import datetime
 import pymysql
@@ -8,7 +6,7 @@ g_data_list=[]
 
 
 # After being called, waits for card insertion. When a proper card is inserted, reads the data on the card chip
-def get_data(reader = '0'):
+def get_data(reader = SC_READER_ID):
     call_eidenv = subprocess.Popen(['eidenv', reader, '-w'],stdout=subprocess.PIPE)#,stderr=subprocess.STDOUT)
     call_eidenv.wait()
     eidenv_raw = call_eidenv.communicate()[0]
@@ -24,7 +22,6 @@ def parse(eidenv_raw):
     for i in [0,1,2,6]:
     #for i in [1,2,3,7]:
         raw_line = eidenv_raw.splitlines()[i].split(': ')[1].strip()
-        #print(eidenv_raw_out)
         data_list.append(raw_line)
     timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     data_list.append(timestamp)
@@ -39,7 +36,7 @@ def send_to_db(eidenv_parsed):
 
     cursor = db.cursor()
 
-    cursor.execute("INSERT INTO STUDENTS(FIRST_NAME, LAST_NAME, ID_CODE) VALUES ("+eidenv_parsed[0]+", "+eidenv_parsed[1]+", "+eidenv_parsed[2]+")")
+    cursor.execute("INSERT INTO STUDENTS(ID_CODE, SURNAME, FIRSTNAME) VALUES ("+eidenv_parsed[EID_IDCODE]+", "+eidenv_parsed[EID_SNAME]+", "+eidenv_parsed[EID_FNAME]+")")
     db.commit()
 
     db.close()
