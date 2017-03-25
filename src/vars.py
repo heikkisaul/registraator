@@ -14,12 +14,7 @@ EID_SNAME = 0
 EID_IDCODE = 3
 EID_TSTAMP = 4
 
-# Variables to identify I/O devices for log
+# Variables to identify I/O devices
 SC_READER = 'SC'
 RFID_READER = 'RF'
 FPRINT_READER = 'FP'
-
-# Variables to select I/O devices
-SC_READER_ID = '0'
-RFID_READER_ID = '0'
-FPRINT_READER_ID = '0'
