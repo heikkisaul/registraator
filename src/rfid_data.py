@@ -1,8 +1,15 @@
-def get_data():
-    keyboard_input = input("Insert RFID tag code")
+##def get_data():
+##    print("rfid")
+##    keyboard_input = raw_input()
+##    print(keyboard_input)
+##
+##if __name__ == "__main__":
+##    get_data()
 
-    print(keyboard_input)
-    return
 
-if __name__ == "__main__":
-    print(get_data())
+
+
+
+
+
+
