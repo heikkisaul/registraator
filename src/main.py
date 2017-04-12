@@ -5,7 +5,7 @@ import os
 import sys
 
 p2 = Process(target=ed.test_commit)
-p3 = Process(target=rd.mainhook)
+p3 = Process(target=rd.test_commit)
 
 try:
     p2.start()
