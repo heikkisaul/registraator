@@ -5,6 +5,8 @@ import subprocess
 import datetime
 #import pymysql
 from vars import *
+import os
+import signal
 g_data_list=[]
 
 #reload(sys)
@@ -14,8 +16,9 @@ g_data_list=[]
 # After being called, waits for card insertion. When a proper card is inserted, reads the data on the card chip
 def get_data(reader = '0'):
     call_eidenv = subprocess.Popen(['eidenv', reader, '-w'],stdout=subprocess.PIPE)#,stderr=subprocess.STDOUT)
-    call_eidenv.wait()
+    call_eidenv.wait(2)
     eidenv_raw = call_eidenv.communicate()[0]
+    #call_eidenv.kill()
     return eidenv_raw.decode('latin-1')
 
 # Parses raw data from get_eid_data() into a list [surname,first name,ID code]
