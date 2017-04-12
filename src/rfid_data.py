@@ -1,5 +1,5 @@
 
-#import pyxhook
+import pyxhook
 import time
 import datetime
 from vars import *
@@ -81,7 +81,7 @@ def commit_data(rfid_parsed):
     #send_to_db(rfid_parsed)
 
 def test_commit():
-    result = parse(test_serial)
+    result = parse(mainhook())
     commit_data(result)
     print(result)
 

@@ -1,6 +1,6 @@
 from multiprocessing import Process
 import esteid_data as ed
-import example as rd
+import rfid_data as rd
 import os
 import sys
 
@@ -12,7 +12,7 @@ try:
     p3.start()
     os.execv(sys.executable,['python3'] + sys.argv)
 except:
-    os.execv(sys.executable, ['python3'] + sys.argv)0858860661
+    os.execv(sys.executable, ['python3'] + sys.argv)
     
 #try:
     #ed.test_commit()
