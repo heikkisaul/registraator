@@ -10,8 +10,12 @@ p3 = Process(target=rd.test_commit)
 try:
     p2.start()
     p3.start()
+    p2.join()
+    p3.join()
     os.execv(sys.executable,['python3'] + sys.argv)
 except:
+    p2.join()
+    p3.join()
     os.execv(sys.executable, ['python3'] + sys.argv)
     
 ##try:
