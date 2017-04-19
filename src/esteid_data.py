@@ -18,11 +18,11 @@ def get_data(reader = '0'):
     call_eidenv = subprocess.Popen(['eidenv', reader, '-w'],stdout=subprocess.PIPE)#,stderr=subprocess.STDOUT)
     #call_eidenv.wait()
     try:
-        eidenv_raw = call_eidenv.communicate(5)[0]
-        #call_eidenv.kill()
+        eidenv_raw = call_eidenv.communicate(timeout=5)[0]
         return eidenv_raw.decode('latin-1')
-    except TimeoutExpired:
+    except:
         call_eidenv.kill()
+
 
     #return eidenv_raw.decode('latin-1')
 
