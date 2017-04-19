@@ -3,6 +3,7 @@ import esteid_data as ed
 import rfid_data as rd
 import os
 import sys
+from vars import *
 
 p2 = Process(target=ed.test_commit)
 p3 = Process(target=rd.test_commit)

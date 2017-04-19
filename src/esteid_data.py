@@ -9,6 +9,8 @@ import os
 import signal
 g_data_list=[]
 
+global LAST_CODE
+
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
 
@@ -39,7 +41,6 @@ def parse(eidenv_raw):
     return data_list
 
 def commit_data(eidenv_parsed):
-    LAST_CODE = eidenv_parsed[EID_IDCODE]
     write_to_file(eidenv_parsed)
     #send_to_db(eidenv_parsed)
 
@@ -63,7 +64,7 @@ def write_to_file(eidenv_parsed):
 def test_commit():
     result = parse(get_data())
     commit_data(result)
-    print(LAST_CODE)
+    print(result)
 
 if __name__ == "__main__":
 
