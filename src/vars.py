@@ -20,3 +20,7 @@ RFID_TSTAMP = 1
 # Variables to identify I/O devices
 SC_READER = 'SC'
 RFID_READER = 'RF'
+
+# Variables to communicate data between files
+
+LAST_CODE = 0

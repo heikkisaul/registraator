@@ -24,8 +24,6 @@ def get_data(reader = '0'):
         call_eidenv.kill()
 
 
-    #return eidenv_raw.decode('latin-1')
-
 # Parses raw data from get_eid_data() into a list [surname,first name,ID code]
 def parse(eidenv_raw):
 
@@ -41,6 +39,7 @@ def parse(eidenv_raw):
     return data_list
 
 def commit_data(eidenv_parsed):
+    LAST_CODE = eidenv_parsed[EID_IDCODE]
     write_to_file(eidenv_parsed)
     #send_to_db(eidenv_parsed)
 
@@ -64,7 +63,7 @@ def write_to_file(eidenv_parsed):
 def test_commit():
     result = parse(get_data())
     commit_data(result)
-    print(result)
+    print(LAST_CODE)
 
 if __name__ == "__main__":
 
