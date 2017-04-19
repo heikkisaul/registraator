@@ -84,8 +84,6 @@ class CardRegPage(tk.Frame):
         selectButton.grid(row = 2, column = 1,sticky = "nsew")
         backButton.grid(row=3, column=1,sticky = "nsew")
 
-    #TODO fill card number label upon card read when on this page (start waiting for entry at frame raise)
-
 class AdminPage(tk.Frame):
 
     def __init__(self, parent, controller):
