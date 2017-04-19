@@ -81,9 +81,12 @@ def commit_data(rfid_parsed):
     #send_to_db(rfid_parsed)
 
 def test_commit():
-    result = parse(mainhook())
-    commit_data(result)
-    print(result)
+    try:
+        result = parse(mainhook())
+        commit_data(result)
+        print(result)
+    except:
+        exit()
 
 if __name__=="__main__":
 

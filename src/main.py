@@ -14,15 +14,15 @@ try:
 except:
     os.execv(sys.executable, ['python3'] + sys.argv)
     
-#try:
-    #ed.test_commit()
-    #rd.mainhook()
-
-    #os.execv(sys.executable, ['python3'] + sys.argv)
-    #exit()
-#except:
-    #os.execv(sys.executable,['python3'] + sys.argv)
-    #exit()
+##try:
+##    ed.test_commit()
+##    rd.test_commit()
+##
+##    os.execv(sys.executable, ['python3'] + sys.argv)
+##    exit()
+##except:
+##    os.execv(sys.executable,['python3'] + sys.argv)
+##    exit()
 
 
 
