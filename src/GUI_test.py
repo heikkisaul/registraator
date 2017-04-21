@@ -10,6 +10,7 @@ import time
 
 import rfid_data as rd
 import esteid_data as ed
+from vars import *
 
 class Registrator(tk.Tk):
 
@@ -171,7 +172,7 @@ class StudentPage(tk.Frame):
             result = rd.test_commit()
             try:
                 pass
-                queue.put(result[-1])
+                queue.put(result[RFID_SERIALNO])
 
             except:
                 pass
@@ -183,7 +184,7 @@ class StudentPage(tk.Frame):
 
             try:
                 pass
-                queue.put(result[-1])
+                queue.put(result[EID_IDCODE])
 
             except:
                 pass
