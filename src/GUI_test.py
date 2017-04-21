@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 
 import random
-from multiprocessing import Process, Value, Array
+from multiprocessing import Process, Queue
+import queue
 import os
 import sys
 import time
@@ -17,12 +18,11 @@ class Registrator(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         tk.Tk.geometry(self,"320x480")
-
         container = tk.Frame(self)
         container.pack(side="top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-
+        self.queue = q
         self.frames = {}
 
         for F in (LandingPage, AdminPage, NewLecturePage, CardRegPage, AddStudentPage, StudentPage):
@@ -133,11 +133,12 @@ class StudentPage(tk.Frame):
 
 
     def start_cardlistener(self):
-
+        q = Queue()
         num0 = Value('i',0)
         num1 = Value('i', 0)
 
-        self.p1 = Process(target=self.rfid_multiprocessing, args=(num0))
+        self.p1 = Process(target=self.rfid_multiprocessing, args=(self.queue,))
+        
         self.p2 = Process(target=self.scard_multiprocessing, args=(num1))
 
         self.p1.start()
@@ -146,12 +147,12 @@ class StudentPage(tk.Frame):
         print(num0.value)
         print(num1.value)
 
-    def rfid_multiprocessing(self, n):
+    def rfid_multiprocessing(self, queue, n):
         global sharedvar
         while True:
             result = rd.test_commit()
             n.value = 3
-            print(result)
+            queue.put(result)
 
     def scard_multiprocessing(self, n):
         global sharedvar
