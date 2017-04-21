@@ -13,7 +13,7 @@ import esteid_data as ed
 
 class Registrator(tk.Tk):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self,*args, **kwargs):
 
         tk.Tk.__init__(self, *args, **kwargs)
 
@@ -22,7 +22,6 @@ class Registrator(tk.Tk):
         container.pack(side="top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight=1)
         container.grid_columnconfigure(0, weight=1)
-        self.queue = q
         self.frames = {}
 
         for F in (LandingPage, AdminPage, NewLecturePage, CardRegPage, AddStudentPage, StudentPage):
@@ -128,38 +127,45 @@ class StudentPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        self.queue = q
+
+
+
         startButton = ttk.Button(self, text="ALUSTA",command=self.start_cardlistener)
         startButton.grid(row=2, column=1,sticky = "nsew")
 
 
     def start_cardlistener(self):
         q = Queue()
-        num0 = Value('i',0)
-        num1 = Value('i', 0)
 
         self.p1 = Process(target=self.rfid_multiprocessing, args=(self.queue,))
         
-        self.p2 = Process(target=self.scard_multiprocessing, args=(num1))
+        self.p2 = Process(target=self.scard_multiprocessing, args=(self.queue,))
 
-        self.p1.start()
+        #self.p1.start()
         self.p2.start()
 
-        print(num0.value)
-        print(num1.value)
-
     def rfid_multiprocessing(self, queue, n):
-        global sharedvar
+
         while True:
             result = rd.test_commit()
             n.value = 3
             queue.put(result)
 
-    def scard_multiprocessing(self, n):
-        global sharedvar
+    def scard_multiprocessing(self, queue):
+
         while True:
             result = ed.sc_test_commit()
-            n.value = 2
-            print(result)
+            queue.put(result)
+            try:
+                pass
+                #print(queue.get(0))
+            except:
+                pass
+                #print("pizdec")
+
+
+q = Queue()
 
 app = Registrator()
 app.mainloop()
