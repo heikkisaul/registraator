@@ -2,13 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 
 import random
-from multiprocessing import Process
+from multiprocessing import Process, Value, Array
 import os
 import sys
 import time
 
-#import rfid_data as rd
-#import esteid_data as ed
+import rfid_data as rd
+import esteid_data as ed
 
 class Registrator(tk.Tk):
 
@@ -123,28 +123,41 @@ class AddStudentPage(tk.Frame):
 
 class StudentPage(tk.Frame):
 
+    sharedvar = 0
+
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        startButton = ttk.Button(self, text="ALUSTA")
-        startButton.grid(row=2, column=1,sticky = "nsew",command=self.start_cardlistener)
+        startButton = ttk.Button(self, text="ALUSTA",command=self.start_cardlistener)
+        startButton.grid(row=2, column=1,sticky = "nsew")
 
 
     def start_cardlistener(self):
-        self.p1 = Process(target=self.rfid_multiprocessing)
-        self.p2 = Process(target=self.scard_multiprocessing)
+
+        num0 = Value('i',0)
+        num1 = Value('i', 0)
+
+        self.p1 = Process(target=self.rfid_multiprocessing, args=(num0))
+        self.p2 = Process(target=self.scard_multiprocessing, args=(num1))
 
         self.p1.start()
         self.p2.start()
 
-    def rfid_multiprocessing(self):
+        print(num0.value)
+        print(num1.value)
+
+    def rfid_multiprocessing(self, n):
+        global sharedvar
         while True:
             result = rd.test_commit()
+            n.value = 3
             print(result)
 
-    def scard_multiprocessing(self):
+    def scard_multiprocessing(self, n):
+        global sharedvar
         while True:
             result = ed.sc_test_commit()
+            n.value = 2
             print(result)
 
 app = Registrator()
