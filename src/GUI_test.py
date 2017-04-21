@@ -130,10 +130,13 @@ class StudentPage(tk.Frame):
         self.queue = q
 
 
+        infoLabel = ttk.Label(self, text="kartofel")
+        infoLabel.grid(row=1, column=1,sticky = "nsew")
 
         startButton = ttk.Button(self, text="ALUSTA",command=self.start_cardlistener)
         startButton.grid(row=2, column=1,sticky = "nsew")
 
+        self.infoLabel = infoLabel
 
     def start_cardlistener(self):
         q = Queue()
@@ -144,6 +147,12 @@ class StudentPage(tk.Frame):
 
         #self.p1.start()
         self.p2.start()
+
+    def show_info(self):
+        try:
+            self.infoLabel.config(text=self.queue.get(0))
+        except:
+            print("pizdec")
 
     def rfid_multiprocessing(self, queue, n):
 
