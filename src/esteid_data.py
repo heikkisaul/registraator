@@ -61,9 +61,12 @@ def sc_write_to_file(eidenv_parsed):
     f.close()
 
 def sc_test_commit():
-    result = sc_parse(get_data())
-    sc_commit_data(result)
-    return result
+    try:
+        result = sc_parse(get_data())
+        sc_commit_data(result)
+        return result
+    except:
+        return None
 
 if __name__ == "__main__":
 

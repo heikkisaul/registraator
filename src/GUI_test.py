@@ -8,6 +8,7 @@ import sys
 import time
 
 import rfid_data as rd
+import esteid_data as ed
 
 class Registrator(tk.Tk):
 
@@ -131,11 +132,6 @@ class StudentPage(tk.Frame):
         self.p2.start()
 
 
-    def multiprocessing_test(self):
-        while True:
-            time.sleep(3)
-            print(random.randint(0, 999999999))
-
     def rfid_multiprocessing(self):
         while True:
             result = rd.test_commit()
@@ -148,18 +144,3 @@ class StudentPage(tk.Frame):
 
 app = Registrator()
 app.mainloop()
-
-    # p2 = Process(target=multiprocessing_test)
-    # p3 = Process(target=multiprocessing_test)
-
-    # try:
-    #     p2.start()
-    #     p3.start()
-    #     #os.execv(sys.executable,['python3'] + sys.argv)
-    #
-    # except:
-    #     #os.execv(sys.executable, ['python3'] + sys.argv)
-    #     print("exception")
-    #
-    # #app = Registrator()
-    # #app.mainloop()
