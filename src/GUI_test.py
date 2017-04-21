@@ -123,6 +123,7 @@ class StudentPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.p1 = Process(target=self.multiprocessing_test)
+        self.p1.start()
 
 
     def multiprocessing_test(self):
