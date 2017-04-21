@@ -4,6 +4,10 @@ import rfid_data as rd
 import os
 import sys
 from vars import *
+import random
+
+def multiprocessing_test():
+    print(random.randint(0, 999999999))
 
 p2 = Process(target=ed.test_commit)
 p3 = Process(target=rd.test_commit)
