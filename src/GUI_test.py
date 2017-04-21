@@ -125,7 +125,10 @@ class StudentPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.p1 = Process(target=self.rfid_multiprocessing)
+        self.p2 = Process(target=self.scard_multiprocessing)
+
         self.p1.start()
+        self.p2.start()
 
 
     def multiprocessing_test(self):
@@ -135,8 +138,12 @@ class StudentPage(tk.Frame):
 
     def rfid_multiprocessing(self):
         while True:
-            #time.sleep(3)
             result = rd.test_commit()
+            print(result)
+
+    def scard_multiprocessing(self):
+        while True:
+            result = ed.sc_test_commit()
             print(result)
 
 app = Registrator()

@@ -63,7 +63,7 @@ def sc_write_to_file(eidenv_parsed):
 def sc_test_commit():
     result = sc_parse(get_data())
     sc_commit_data(result)
-    print(result)
+    return result
 
 if __name__ == "__main__":
 
