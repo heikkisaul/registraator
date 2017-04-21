@@ -7,8 +7,8 @@ import os
 import sys
 import time
 
-import rfid_data as rd
-import esteid_data as ed
+#import rfid_data as rd
+#import esteid_data as ed
 
 class Registrator(tk.Tk):
 
@@ -125,12 +125,17 @@ class StudentPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
+        startButton = ttk.Button(self, text="ALUSTA")
+        startButton.grid(row=2, column=1,sticky = "nsew",command=self.start_cardlistener)
+
+
+    def start_cardlistener(self):
         self.p1 = Process(target=self.rfid_multiprocessing)
         self.p2 = Process(target=self.scard_multiprocessing)
 
         self.p1.start()
         self.p2.start()
-
 
     def rfid_multiprocessing(self):
         while True:
