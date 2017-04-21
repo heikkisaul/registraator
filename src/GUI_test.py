@@ -1,6 +1,12 @@
 import tkinter as tk
 from tkinter import ttk
 
+import random
+from multiprocessing import Process
+import os
+import sys
+import time
+
 class Registrator(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -116,9 +122,37 @@ class StudentPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        self.p1 = Process(target=self.multiprocessing_test)
+
+
+    def multiprocessing_test(self):
+        while True:
+            time.sleep(3)
+            print(random.randint(0, 999999999))
 
     #TODO add label to show ID-code or card code
     #TODO add mechanism to flash screen green on successful read
 
-app = Registrator()
-app.mainloop()
+def multiprocessing_test():
+    print(random.randint(0, 999999999))
+    print()
+
+if __name__ == "__main__":
+
+    app = Registrator()
+    app.mainloop()
+
+    p2 = Process(target=multiprocessing_test)
+    p3 = Process(target=multiprocessing_test)
+
+    try:
+        p2.start()
+        p3.start()
+        #os.execv(sys.executable,['python3'] + sys.argv)
+
+    except:
+        #os.execv(sys.executable, ['python3'] + sys.argv)
+        print("exception")
+
+    #app = Registrator()
+    #app.mainloop()

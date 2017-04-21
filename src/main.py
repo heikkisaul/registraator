@@ -18,7 +18,7 @@ while True:
     ed.test_commit()
 
     try:
-        #p2.start()
+        p2.start()
         p3.start()
         os.execv(sys.executable,['python3'] + sys.argv)
 
