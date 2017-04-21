@@ -8,16 +8,21 @@ from vars import *
 p2 = Process(target=ed.test_commit)
 p3 = Process(target=rd.test_commit)
 
-try:
-    p2.start()
-    p3.start()
-    os.execv(sys.executable,['python3'] + sys.argv)
 
-except:
-    os.execv(sys.executable, ['python3'] + sys.argv)
+while True:
+
+    ed.test_commit()
+
+    try:
+        #p2.start()
+        p3.start()
+        os.execv(sys.executable,['python3'] + sys.argv)
+
+    except:
+        os.execv(sys.executable, ['python3'] + sys.argv)
 
 
-    
+
 ##try:
 ##    ed.test_commit()
 ##    rd.test_commit()
