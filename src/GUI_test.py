@@ -148,20 +148,22 @@ class StudentPage(tk.Frame):
         #self.p1.start()
         self.p2.start()
 
-        while self.p2.is_alive():
-            self.show_info(val=self.queue.get(0))
-
+        self.after(100, func=self.show_info)
 
         #self.after(100, self.show_info)
 
-    def show_info(self, val):
+    def show_info(self):
 
-        try:
-            print(val)
-            #self.infoLabel.config(text=self.queue.get(0))
-            self.infoLabel.insert('end', "flagon")
-        except:
-            print("pizdec")
+        if self.p2.is_alive():
+            try:
+                #print(val)
+                self.infoLabel.insert('end', "flagon")
+            except:
+                print("pizdec")
+            self.after(100, func=self.show_info)
+            return
+        else:
+            return
 
     def rfid_multiprocessing(self, queue, n):
 
