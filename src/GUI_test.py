@@ -157,7 +157,7 @@ class StudentPage(tk.Frame):
         if self.p2.is_alive():
             try:
                 #print(val)
-                self.infoLabel.insert('end', "flagon")
+                self.infoLabel.insert('end', self.queue.get(0))
             except:
                 print("pizdec")
             self.after(100, func=self.show_info)
