@@ -9,7 +9,6 @@ import os
 import signal
 g_data_list=[]
 
-global LAST_CODE
 
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
@@ -27,7 +26,7 @@ def get_data(reader = '0'):
 
 
 # Parses raw data from get_eid_data() into a list [surname,first name,ID code]
-def parse(eidenv_raw):
+def sc_parse(eidenv_raw):
 
     global g_data_list
 
@@ -40,11 +39,11 @@ def parse(eidenv_raw):
     data_list.append(timestamp)
     return data_list
 
-def commit_data(eidenv_parsed):
-    write_to_file(eidenv_parsed)
+def sc_commit_data(eidenv_parsed):
+    sc_write_to_file(eidenv_parsed)
     #send_to_db(eidenv_parsed)
 
-def send_to_db(eidenv_parsed):
+def sc_send_to_db(eidenv_parsed):
     db = pymysql.connect(DB_ADDR, DB_USR, DB_PWD, DB_NAME)
 
     cursor = db.cursor()
@@ -54,22 +53,22 @@ def send_to_db(eidenv_parsed):
 
     db.close()
 
-def write_to_file(eidenv_parsed):
+def sc_write_to_file(eidenv_parsed):
     f = open('data.log', 'a+')
 
     f.write("%s; %s; %s; %s; %s; %s\n" % (eidenv_parsed[EID_TSTAMP],SC_READER,eidenv_parsed[EID_IDCODE],eidenv_parsed[EID_SNAME],eidenv_parsed[EID_FNAME],eidenv_parsed[EID_MNAME]))
 
     f.close()
 
-def test_commit():
-    result = parse(get_data())
-    commit_data(result)
+def sc_test_commit():
+    result = sc_parse(get_data())
+    sc_commit_data(result)
     print(result)
 
 if __name__ == "__main__":
 
     #print(parse(get_data()))
-    commit_data(parse(get_data()))
+    sc_commit_data(sc_parse(get_data()))
 
 
 

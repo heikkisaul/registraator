@@ -20,6 +20,8 @@ def kbevent(event):
 def mainhook():
     global running
     global serial_no
+    serial_no = []
+
     ctr = 0 
     
     # Create hookmanager
@@ -41,6 +43,11 @@ def mainhook():
 
     # Close the listener when we are done
     hookman.cancel()
+    print(serial_no)
+    # if serial_no == []:
+    #     return ["1","2","3","4","5","6","7","8","9","0","Return"]
+    # else:
+    #     return serial_no
     return serial_no
 
 #TODO print to file and send to DB functions (DB dummy)
@@ -72,9 +79,13 @@ def parse(rfid_raw):
 def write_to_file(rfid_parsed):
     f = open('data.log', 'a+')
 
-    f.write("%s; %s; %s;\n" % (rfid_parsed[RFID_TSTAMP],RFID_READER,rfid_parsed[RFID_SERIALNO]))
+    try:
+        f.write("%s; %s; %s;\n" % (rfid_parsed[RFID_TSTAMP],RFID_READER,rfid_parsed[RFID_SERIALNO]))
+        f.close()
+    except:
+        f.close()
 
-    f.close()
+
 
 def commit_data(rfid_parsed):
     write_to_file(rfid_parsed)

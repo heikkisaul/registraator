@@ -134,33 +134,25 @@ class StudentPage(tk.Frame):
             print(random.randint(0, 999999999))
 
     def rfid_multiprocessing(self):
-        result = rd.test_commit()
-        print(result)
+        while True:
+            #time.sleep(3)
+            result = rd.test_commit()
+            print(result)
 
+app = Registrator()
+app.mainloop()
 
-    #TODO add label to show ID-code or card code
-    #TODO add mechanism to flash screen green on successful read
+    # p2 = Process(target=multiprocessing_test)
+    # p3 = Process(target=multiprocessing_test)
 
-def multiprocessing_test():
-    print(random.randint(0, 999999999))
-    print()
-
-if __name__ == "__main__":
-
-    app = Registrator()
-    app.mainloop()
-
-    p2 = Process(target=multiprocessing_test)
-    p3 = Process(target=multiprocessing_test)
-
-    try:
-        p2.start()
-        p3.start()
-        #os.execv(sys.executable,['python3'] + sys.argv)
-
-    except:
-        #os.execv(sys.executable, ['python3'] + sys.argv)
-        print("exception")
-
-    #app = Registrator()
-    #app.mainloop()
+    # try:
+    #     p2.start()
+    #     p3.start()
+    #     #os.execv(sys.executable,['python3'] + sys.argv)
+    #
+    # except:
+    #     #os.execv(sys.executable, ['python3'] + sys.argv)
+    #     print("exception")
+    #
+    # #app = Registrator()
+    # #app.mainloop()

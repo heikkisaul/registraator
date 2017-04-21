@@ -2,12 +2,12 @@ import asyncio
 import sys
 from asyncio.subprocess import PIPE, STDOUT
 
-async def get_lines(shell_command):
-    p = await asyncio.create_subprocess_shell(shell_command,
+def get_lines(shell_command):
+    p = yield from asyncio.create_subprocess_shell(shell_command,
             stdin=PIPE, stdout=PIPE, stderr=STDOUT)
-    return (await p.communicate())[0].splitlines()
+    return (yield from p.communicate())[0].splitlines()
 
-async def main():
+def main():
     # get commands output concurrently
     coros = [get_lines('"{e}" -c "print({i:d}); import time; time.sleep({i:d})"'
                        .format(i=i, e=sys.executable))
@@ -21,5 +21,6 @@ if sys.platform.startswith('win'):
     asyncio.set_event_loop(loop)
 else:
     loop = asyncio.get_event_loop()
+
 loop.run_until_complete(main())
 loop.close()
