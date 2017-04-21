@@ -84,7 +84,7 @@ def test_commit():
     try:
         result = parse(mainhook())
         commit_data(result)
-        print(result)
+        return result
     except:
         exit()
 

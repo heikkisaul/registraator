@@ -7,6 +7,8 @@ import os
 import sys
 import time
 
+import rfid_data as rd
+
 class Registrator(tk.Tk):
 
     def __init__(self, *args, **kwargs):
@@ -122,7 +124,7 @@ class StudentPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        self.p1 = Process(target=self.multiprocessing_test)
+        self.p1 = Process(target=self.rfid_multiprocessing)
         self.p1.start()
 
 
@@ -130,6 +132,11 @@ class StudentPage(tk.Frame):
         while True:
             time.sleep(3)
             print(random.randint(0, 999999999))
+
+    def rfid_multiprocessing(self):
+        result = rd.test_commit()
+        print(result)
+
 
     #TODO add label to show ID-code or card code
     #TODO add mechanism to flash screen green on successful read
