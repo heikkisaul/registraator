@@ -148,6 +148,10 @@ class StudentPage(tk.Frame):
         #self.p1.start()
         self.p2.start()
 
+        while self.p2.is_alive():
+            self.show_info(val=self.queue.get(0))
+
+
         #self.after(100, self.show_info)
 
     def show_info(self, val):
@@ -176,7 +180,7 @@ class StudentPage(tk.Frame):
                 pass
                 queue.put(result[1])
                 #print(queue.get(0))
-                self.show_info(val=result[1])
+
             except:
                 pass
                 #print("pizdec")
