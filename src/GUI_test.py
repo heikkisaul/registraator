@@ -130,7 +130,7 @@ class StudentPage(tk.Frame):
         self.queue = q
 
 
-        infoLabel = ttk.Label(self, text="kartofel")
+        infoLabel = tk.Text(self)
         infoLabel.grid(row=1, column=1,sticky = "nsew")
 
         startButton = ttk.Button(self, text="ALUSTA",command=self.start_cardlistener)
@@ -153,9 +153,9 @@ class StudentPage(tk.Frame):
     def show_info(self, val):
 
         try:
-            print(self.queue.get(0))
+            print(val)
             #self.infoLabel.config(text=self.queue.get(0))
-            self.infoLabel.config(text=val)
+            self.infoLabel.insert('end', "flagon")
         except:
             print("pizdec")
 
@@ -176,7 +176,7 @@ class StudentPage(tk.Frame):
                 pass
                 queue.put(result[1])
                 #print(queue.get(0))
-                self.show_info(self,result)
+                self.show_info(val=result[1])
             except:
                 pass
                 #print("pizdec")
