@@ -148,9 +148,14 @@ class StudentPage(tk.Frame):
         #self.p1.start()
         self.p2.start()
 
-    def show_info(self):
+        #self.after(100, self.show_info)
+
+    def show_info(self, val):
+
         try:
-            self.infoLabel.config(text=self.queue.get(0))
+            print(self.queue.get(0))
+            #self.infoLabel.config(text=self.queue.get(0))
+            self.infoLabel.config(text=val)
         except:
             print("pizdec")
 
@@ -165,10 +170,13 @@ class StudentPage(tk.Frame):
 
         while True:
             result = ed.sc_test_commit()
-            queue.put(result)
+
+
             try:
                 pass
+                queue.put(result[1])
                 #print(queue.get(0))
+                self.show_info(self,result)
             except:
                 pass
                 #print("pizdec")
