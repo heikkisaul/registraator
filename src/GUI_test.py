@@ -145,7 +145,7 @@ class StudentPage(tk.Frame):
         
         self.p2 = Process(target=self.scard_multiprocessing, args=(self.queue,))
 
-        #self.p1.start()
+        self.p1.start()
         self.p2.start()
 
         self.after(100, func=self.show_info)
@@ -154,7 +154,7 @@ class StudentPage(tk.Frame):
 
     def show_info(self):
 
-        if self.p2.is_alive():
+        if self.p2.is_alive() and self.p1.is_alive():
             try:
                 #print(val)
                 self.infoLabel.insert('end', self.queue.get(0))
@@ -165,31 +165,28 @@ class StudentPage(tk.Frame):
         else:
             return
 
-    def rfid_multiprocessing(self, queue, n):
+    def rfid_multiprocessing(self, queue):
 
         while True:
             result = rd.test_commit()
-            n.value = 3
-            queue.put(result)
+            try:
+                pass
+                queue.put(result[-1])
+
+            except:
+                pass
 
     def scard_multiprocessing(self, queue):
 
         while True:
             result = ed.sc_test_commit()
-            print(result)
 
-            if result != []:
-                try:
-                    pass
-                    queue.put(result[1])
-                    #print(queue.get(0))
+            try:
+                pass
+                queue.put(result[-1])
 
-                except:
-                    pass
-                    #print("pizdec")
-            else:
-                exit()
-
+            except:
+                pass
 
 q = Queue()
 
