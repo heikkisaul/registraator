@@ -174,16 +174,19 @@ class StudentPage(tk.Frame):
 
         while True:
             result = ed.sc_test_commit()
+            print(result)
 
+            if result != []:
+                try:
+                    pass
+                    queue.put(result[1])
+                    #print(queue.get(0))
 
-            try:
-                pass
-                queue.put(result[1])
-                #print(queue.get(0))
-
-            except:
-                pass
-                #print("pizdec")
+                except:
+                    pass
+                    #print("pizdec")
+            else:
+                exit()
 
 
 q = Queue()
