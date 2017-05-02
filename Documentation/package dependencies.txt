@@ -16,13 +16,17 @@ pcsc-tools
 opensc
 |-opensc-pkcs11
 
+# Virtual keyboard
+florence
+|-at-spi2-core
+
 ### PYTHON PACKAGES ###
 
 # library to handle sending data to mysql database
 
 pymysql
 pyxhook
-paramiko
+paramiko1.18 (from versioneye)
 pycrypto
 sshtunnel
 

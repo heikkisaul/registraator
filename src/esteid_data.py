@@ -56,7 +56,7 @@ def sc_send_to_db(eidenv_parsed):
 def sc_write_to_file(eidenv_parsed):
     f = open('data.log', 'a+')
 
-    f.write("%s; %s; %s; %s; %s; %s\n" % (eidenv_parsed[EID_TSTAMP],SC_READER,eidenv_parsed[EID_IDCODE],eidenv_parsed[EID_SNAME],eidenv_parsed[EID_FNAME],eidenv_parsed[EID_MNAME]))
+    f.write("%s; %s; %s; %s; %s\n" % (eidenv_parsed[EID_TSTAMP],SC_READER,eidenv_parsed[EID_IDCODE],eidenv_parsed[EID_FNAME],eidenv_parsed[EID_SNAME]))
 
     f.close()
 

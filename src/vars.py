@@ -20,9 +20,7 @@ RFID_TSTAMP = 1
 # Variables to identify I/O devices
 SC_READER = 'SC'
 RFID_READER = 'RF'
+MANUAL_REG = 'MR'
 
-# Variables to communicate data between files
-
-LAST_CODE = 0
-
+# GUI variables
 BGCOLOR = '#d9d9d9'

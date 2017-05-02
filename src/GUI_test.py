@@ -7,10 +7,13 @@ import queue
 import os
 import sys
 import time
+import datetime
 
-import rfid_data as rd
-import esteid_data as ed
+#import rfid_data as rd
+#import esteid_data as ed
 from vars import *
+
+lecturer_id = 0
 
 class Registrator(tk.Tk):
 
@@ -75,6 +78,11 @@ class NewLecturePage(tk.Frame):
         selectLectButton.grid(row = 3, column = 1,sticky = "nsew")
         backButton.grid(row=4, column=1,sticky = "nsew")
 
+    def get_lecturer_id(self):
+        global lecturer_id
+        lecturer_id = ed.sc_parse(ed.get_data())[3]
+        print(lecturer_id)
+
     #TODO populate list on button press by searching from 'lectures' table in DB based on lecturer ID-code (lecturer must use ID-card)
 
 class CardRegPage(tk.Frame):
@@ -92,22 +100,28 @@ class CardRegPage(tk.Frame):
         codeLabel = ttk.Label(self, text="Isikukood")
         rfidLabel = ttk.Label(self, text="Kaardikood")
 
-        selectButton = ttk.Button(self, text = "KINNITA", command = lambda : controller.show_frame(LandingPage),width=40)
+        selectButton = ttk.Button(self, text = "KINNITA", command = self.reg_card,width=40)
         backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=40)
 
-        fnameEntry.grid(row=1, column=1, sticky="nsew")
-        lnameEntry.grid(row=3, column=1, sticky="nsew")
-        codeEntry.grid(row=5, column=1, sticky="nsew")
-        rfidEntry.grid(row=7, column=1, sticky="nsew")
+        codeEntry.grid(row=2, column=1, sticky="nsew")
+        rfidEntry.grid(row=4, column=1, sticky="nsew")
 
-        fnameLabel.grid(row=0, column=1, sticky="nsew")
-        lnameLabel.grid(row=2, column=1, sticky="nsew")
-        codeLabel.grid(row=4, column=1, sticky="nsew")
-        rfidLabel.grid(row=6, column=1, sticky="nsew")
+        codeLabel.grid(row=1,column=1, sticky="nsew")
+        rfidLabel.grid(row=3, column=1, sticky="nsew")
 
+        selectButton.grid(row = 5, column = 1,sticky = "nsew")
+        backButton.grid(row=6, column=1,sticky = "nsew")
 
-        selectButton.grid(row = 8, column = 1,sticky = "nsew")
-        backButton.grid(row=9, column=1,sticky = "nsew")
+        self.codeEntry = codeEntry
+        self.rfidEntry = rfidEntry
+        self.controller = controller
+
+    def reg_card(self):
+        code = self.codeEntry.get()
+        rfid = self.rfidEntry.get()
+        print(code, rfid)
+        # TODO send data to DB
+        self.controller.show_frame(LandingPage)
 
 class AdminPage(tk.Frame):
 
@@ -134,7 +148,7 @@ class AddStudentPage(tk.Frame):
         lnameLabel = ttk.Label(self, text="Perekonnanimi")
         codeLabel = ttk.Label(self, text="Isikukood")
 
-        selectButton = ttk.Button(self, text = "KINNITA", command = lambda : controller.show_frame(AdminPage),width=40)
+        selectButton = ttk.Button(self, text = "KINNITA", command = self.reg_student,width=40)
         backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(AdminPage),width=40)
 
         fnameEntry.grid(row=1, column=1, sticky="nsew")
@@ -148,6 +162,22 @@ class AddStudentPage(tk.Frame):
         selectButton.grid(row = 6, column = 1,sticky = "nsew")
         backButton.grid(row=7, column=1,sticky = "nsew")
 
+        self.fnameEntry = fnameEntry
+        self.lnameEntry = lnameEntry
+        self.codeEntry = codeEntry
+
+    def reg_student(self):
+        fname = self.fnameEntry.get()
+        lname = self.lnameEntry.get()
+        id_code = self.codeEntry.get()
+        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+
+        f = open('data.log', 'a+')
+        f.write("%s; %s; %s; %s; %s\n" % (timestamp, MANUAL_REG, id_code, fname.upper(),lname.upper()))
+        f.close()
+
+        #TODO add lecture visit to DB
+
 class StudentPage(tk.Frame):
 
     sharedvar = 0
@@ -160,7 +190,7 @@ class StudentPage(tk.Frame):
         infoLabel = tk.Label(self, width=40, height=5)
         infoLabel.grid(row=1, column=0,sticky = "nsew")
 
-        startButton = ttk.Button(self, text="ALUSTA",width=40,command=self.start_cardlistener)
+        startButton = ttk.Button(self, text="ALUSTA",width=40)#,command=self.start_cardlistener)
         startButton.grid(row=2, column=0,sticky = "nsew")
 
         self.infoLabel = infoLabel
@@ -193,14 +223,23 @@ class StudentPage(tk.Frame):
         if self.p2.is_alive() and self.p1.is_alive():
             try:
                 #print(val)
-                self.infoLabel.config(text=self.queue.get(0))
+                queue_val = self.queue.get(0)
+                self.queue_val = queue_val
+                self.infoLabel.config(text=self.queue_val)
                 self.show_confirmation()
+
             except:
                 print("error")
             self.after(100, func=self.show_info)
             return
         else:
             return
+
+    def stop_register(self):
+        global lecturer_id
+        if self.queue_val == lecturer_id:
+            print("equality!")
+        #TODO stop student page, go back to admin page
 
     def rfid_multiprocessing(self, queue):
 
