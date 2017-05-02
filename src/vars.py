@@ -24,3 +24,5 @@ RFID_READER = 'RF'
 # Variables to communicate data between files
 
 LAST_CODE = 0
+
+BGCOLOR = '#d9d9d9'
