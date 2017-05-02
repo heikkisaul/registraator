@@ -196,6 +196,7 @@ class StudentPage(tk.Frame):
             try:
                 #print(val)
                 self.infoLabel.config(text=self.queue.get(0))
+                self.show_confirmation()
             except:
                 print("error")
             self.after(100, func=self.show_info)
