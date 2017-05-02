@@ -19,6 +19,7 @@ class Registrator(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         tk.Tk.geometry(self,"320x480")
+        tk.Tk.resizable(self, False, False)
         container = tk.Frame(self)
         container.pack(side="top", fill = "both", expand = True)
         container.grid_rowconfigure(0, weight=1)
@@ -42,9 +43,9 @@ class LandingPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        newLectButton = ttk.Button(self, text = "UUS LOENG", command = lambda : controller.show_frame(NewLecturePage))
-        addCardButton = ttk.Button(self, text="REGISTREERI KAART", command = lambda : controller.show_frame(CardRegPage))
-        closeButton = ttk.Button(self, text="SULGE")
+        newLectButton = ttk.Button(self, text = "UUS LOENG", command = lambda : controller.show_frame(NewLecturePage),width=51)
+        addCardButton = ttk.Button(self, text="REGISTREERI KAART", command = lambda : controller.show_frame(CardRegPage),width=51)
+        closeButton = ttk.Button(self, text="SULGE",width=51)
 
         newLectButton.grid(row = 0, column = 1,sticky = "nsew")
         addCardButton.grid(row=1, column=1,sticky = "nsew")
@@ -63,9 +64,9 @@ class NewLecturePage(tk.Frame):
         lectListScroll.config(command=lectListBox.yview)
         lectListLabel = ttk.Label(self, text="Vali loeng")
 
-        searchLectButton = ttk.Button(self, text="OTSI", command=lambda: controller.show_frame(AdminPage))
-        selectLectButton = ttk.Button(self, text = "VALI LOENG", command = lambda : controller.show_frame(AdminPage))
-        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage))
+        searchLectButton = ttk.Button(self, text="OTSI", command=lambda: controller.show_frame(AdminPage),width=51)
+        selectLectButton = ttk.Button(self, text = "VALI LOENG", command = lambda : controller.show_frame(AdminPage),width=51)
+        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=51)
 
         lectListBox.grid(row=1, column=1,sticky = "nsew")
         lectListScroll.grid(row=1, column=2, sticky="nsew")
@@ -81,25 +82,39 @@ class CardRegPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        nameEntry = ttk.Entry(self)
+        fnameEntry = ttk.Entry(self)
+        mnameEntry = ttk.Entry(self)
+        lnameEntry = ttk.Entry(self)
         codeEntry = ttk.Entry(self)
 
+        fnameLabel = ttk.Label(self, text="Eesnimi")
+        mnameLabel = ttk.Label(self, text="Keskmine nimi")
+        lnameLabel = ttk.Label(self, text="Perekonnanimi")
+        codeLabel = ttk.Label(self, text="Isikukood")
 
-        selectButton = ttk.Button(self, text = "KINNITA", command = lambda : controller.show_frame(LandingPage))
-        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage))
+        selectButton = ttk.Button(self, text = "KINNITA", command = lambda : controller.show_frame(LandingPage),width=51)
+        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=51)
 
-        nameEntry.grid(row=0, column=1, sticky="nsew")
-        codeEntry.grid(row=1, column=1, sticky="nsew")
-        selectButton.grid(row = 2, column = 1,sticky = "nsew")
-        backButton.grid(row=3, column=1,sticky = "nsew")
+        fnameEntry.grid(row=1, column=1, sticky="nsew")
+        mnameEntry.grid(row=3, column=1, sticky="nsew")
+        lnameEntry.grid(row=5, column=1, sticky="nsew")
+
+        fnameLabel.grid(row=0, column=1, sticky="nsew")
+        mnameLabel.grid(row=2, column=1, sticky="nsew")
+        lnameLabel.grid(row=4, column=1, sticky="nsew")
+        codeLabel.grid(row=6, column=1, sticky="nsew")
+
+        codeEntry.grid(row=7, column=1, sticky="nsew")
+        selectButton.grid(row = 8, column = 1,sticky = "nsew")
+        backButton.grid(row=9, column=1,sticky = "nsew")
 
 class AdminPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        endLectButton = ttk.Button(self, text = "LÕPETA LOENG", command = lambda : controller.show_frame(LandingPage))
-        addStudentButton = ttk.Button(self, text="LISA ÕPILANE", command = lambda : controller.show_frame(AddStudentPage))
-        lockButton = ttk.Button(self, text="EKRAANILUKK", command = lambda : controller.show_frame(StudentPage))
+        endLectButton = ttk.Button(self, text = "LÕPETA LOENG", command = lambda : controller.show_frame(LandingPage),width=51)
+        addStudentButton = ttk.Button(self, text="LISA ÕPILANE", command = lambda : controller.show_frame(AddStudentPage),width=51)
+        lockButton = ttk.Button(self, text="EKRAANILUKK", command = lambda : controller.show_frame(StudentPage),width=51)
 
         endLectButton.grid(row = 0, column = 1,sticky = "nsew")
         addStudentButton.grid(row=1, column=1,sticky = "nsew")
@@ -109,17 +124,32 @@ class AddStudentPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        selectButton = ttk.Button(self, text = "KINNITA", command = lambda : controller.show_frame(LandingPage))
-        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(AdminPage))
 
-        nameEntry = ttk.Entry(self)
+        fnameEntry = ttk.Entry(self)
+        mnameEntry = ttk.Entry(self)
+        lnameEntry = ttk.Entry(self)
         codeEntry = ttk.Entry(self)
 
-        nameEntry.grid(row=0, column=1, sticky="nsew")
-        codeEntry.grid(row=1, column=1, sticky="nsew")
+        fnameLabel = ttk.Label(self, text="Eesnimi")
+        mnameLabel = ttk.Label(self, text="Keskmine nimi")
+        lnameLabel = ttk.Label(self, text="Perekonnanimi")
+        codeLabel = ttk.Label(self, text="Isikukood")
 
-        selectButton.grid(row = 2, column = 1,sticky = "nsew")
-        backButton.grid(row=3, column=1,sticky = "nsew")
+        selectButton = ttk.Button(self, text = "KINNITA", command = lambda : controller.show_frame(AdminPage),width=51)
+        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(AdminPage),width=51)
+
+        fnameEntry.grid(row=1, column=1, sticky="nsew")
+        mnameEntry.grid(row=3, column=1, sticky="nsew")
+        lnameEntry.grid(row=5, column=1, sticky="nsew")
+
+        fnameLabel.grid(row=0, column=1, sticky="nsew")
+        mnameLabel.grid(row=2, column=1, sticky="nsew")
+        lnameLabel.grid(row=4, column=1, sticky="nsew")
+        codeLabel.grid(row=6, column=1, sticky="nsew")
+
+        codeEntry.grid(row=7, column=1, sticky="nsew")
+        selectButton.grid(row = 8, column = 1,sticky = "nsew")
+        backButton.grid(row=9, column=1,sticky = "nsew")
 
 class StudentPage(tk.Frame):
 
@@ -130,20 +160,27 @@ class StudentPage(tk.Frame):
 
         self.queue = q
 
+        infoLabel = tk.Label(self, width=51, height=5)
+        infoLabel.grid(row=1, column=0,sticky = "nsew")
 
-        infoLabel = tk.Text(self)
-        infoLabel.grid(row=1, column=1,sticky = "nsew")
-
-        startButton = ttk.Button(self, text="ALUSTA",command=self.start_cardlistener)
-        startButton.grid(row=2, column=1,sticky = "nsew")
+        startButton = ttk.Button(self, text="ALUSTA",width=51,command=self.start_cardlistener)
+        startButton.grid(row=2, column=0,sticky = "nsew")
 
         self.infoLabel = infoLabel
+
+    def show_confirmation(self):
+        self.infoLabel.config(background='lightgreen')
+        self.after(500, self.restore_default)
+
+    def restore_default(self):
+        self.infoLabel.config(background='SystemMenu')
+
 
     def start_cardlistener(self):
         q = Queue()
 
         self.p1 = Process(target=self.rfid_multiprocessing, args=(self.queue,))
-        
+
         self.p2 = Process(target=self.scard_multiprocessing, args=(self.queue,))
 
         self.p1.start()

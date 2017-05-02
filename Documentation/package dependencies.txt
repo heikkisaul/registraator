@@ -22,5 +22,8 @@ opensc
 
 pymysql
 pyxhook
+paramiko
+pycrypto
+sshtunnel
 
 testing
