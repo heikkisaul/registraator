@@ -195,9 +195,9 @@ class StudentPage(tk.Frame):
         if self.p2.is_alive() and self.p1.is_alive():
             try:
                 #print(val)
-                self.infoLabel.insert('end', self.queue.get(0))
+                self.infoLabel.config(text=self.queue.get(0))
             except:
-                print("pizdec")
+                print("error")
             self.after(100, func=self.show_info)
             return
         else:
