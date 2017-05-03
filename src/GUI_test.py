@@ -15,6 +15,7 @@ import esteid_data as ed
 from vars import *
 
 lecturer_id = 0
+lecture_id = 0
 lecture_data = ""
 
 class Registrator(tk.Tk):
@@ -118,9 +119,11 @@ class NewLecturePage(tk.Frame):
 
     def get_selected_lecture(self):
         global lecture_data
+        global lecture_id
         selected = self.lectListBox.curselection()
         selection_id = selected[0]
         lecture_raw = self.lect_list[selection_id]
+        lecture_id = lecture_raw[1]
         lecture_data="{}\n{}\n{}".format(lecture_raw[0],lecture_raw[3], lecture_raw[2])
 
         self.controller.show_frame(AdminPage)
@@ -232,24 +235,28 @@ class AddStudentPage(tk.Frame):
         self.codeEntry = codeEntry
 
     def reg_student(self):
+        global lecture_id
+
         fname = self.fnameEntry.get()
         lname = self.lnameEntry.get()
         id_code = self.codeEntry.get()
-        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+        timestamp = datetime.datetime.now()
+        str_timestamp = '%Y-%m-%d %H:%M:%S'.format(timestamp)
 
         f = open('data.log', 'a+')
-        f.write("%s; %s; %s; %s; %s\n" % (timestamp, MANUAL_REG, id_code, fname.upper(),lname.upper()))
+        f.write("%s; %s; %s; %s; %s\n" % (str_timestamp, MANUAL_REG, id_code, fname.upper(),lname.upper()))
         f.close()
 
-        # conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
-        #                        db=DB_NAME)
-        # cur = conn.cursor()
-        # cur.execute("INSERT INTO CARD_DATA (CARD_CODE, ID_CODE) VALUES ({}, {});".format(rfid, code))
-        # conn.commit()
-        # print(cur.description)
-        #
-        # cur.close()
-        # conn.close()
+        conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+                               db=DB_NAME)
+        cur = conn.cursor()
+        print("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ({}, {}, {});".format(id_code, lecture_id, timestamp.strftime('\'%Y-%m-%d %H:%M:%S\'')))
+        cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ({}, {}, {});".format(id_code, lecture_id, timestamp.strftime('\'%Y-%m-%d %H:%M:%S\'')))
+        conn.commit()
+        print(cur.description)
+
+        cur.close()
+        conn.close()
 
 class StudentPage(tk.Frame):
 
