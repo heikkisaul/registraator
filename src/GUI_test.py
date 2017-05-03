@@ -15,6 +15,7 @@ import esteid_data as ed
 from vars import *
 
 lecturer_id = 0
+lecture_data = tk.StringVar()
 
 class Registrator(tk.Tk):
 
@@ -62,15 +63,15 @@ class NewLecturePage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        lectListBox = tk.Listbox(self)
+        lectListBox = tk.Listbox(self, selectmode='single')
         lectListScroll = ttk.Scrollbar(self)
         lectListBox.config(yscrollcommand=lectListScroll.set)
         lectListScroll.config(command=lectListBox.yview)
         lectListLabel = ttk.Label(self, text="Vali loeng")
 
-        searchLectButton = ttk.Button(self, text="OTSI", command=self.get_lecture_list,width=40)
-        selectLectButton = ttk.Button(self, text = "VALI LOENG", command = lambda : controller.show_frame(AdminPage),width=40)
-        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=40)
+        searchLectButton = ttk.Button(self, text="OTSI", command=self.get_lecture_list,width=37)
+        selectLectButton = ttk.Button(self, text = "VALI LOENG", command = self.get_selected_lecture,width=37)
+        backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=37)
 
         lectListBox.grid(row=1, column=1,sticky = "nsew")
         lectListScroll.grid(row=1, column=2, sticky="nsew")
@@ -80,12 +81,16 @@ class NewLecturePage(tk.Frame):
         selectLectButton.grid(row = 4, column = 1,sticky = "nsew")
         backButton.grid(row=5, column=1,sticky = "nsew")
 
+        self.lectListBox = lectListBox
+        self.controller = controller
+
     def get_lecturer_id(self):
         lecturer_id = ed.sc_parse(ed.get_data())[3]
         return lecturer_id
 
     def get_lecture_list(self):
         global lecturer_id
+        lect_list=[]
         lecturer_id = self.get_lecturer_id()
         conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
                                db=DB_NAME)
@@ -93,13 +98,30 @@ class NewLecturePage(tk.Frame):
         cur.execute("CALL `lect_reg_base`.`GET_TEACHER_LECTURES`({});".format(lecturer_id))
         print(cur.description)
 
+        ctr=0
+
         for row in cur:
-            print(row)
+            lect_list.append(row)
+
+
+        for row in lect_list:
+            p_row = (row[0], row[1], row[3])
+
+            self.lectListBox.insert(ctr, p_row)
+            ctr+=1
 
         cur.close()
         conn.close()
 
-    #TODO populate list on button press by searching from 'lectures' table in DB based on lecturer ID-code (lecturer must use ID-card)
+        self.lect_list = lect_list
+
+
+    def get_selected_lecture(self):
+        global lecture_data
+        selected = self.lectListBox.curselection()
+        selection_id = selected[0]
+        lecture_data = self.lect_list[selection_id]
+        self.controller.show_frame(AdminPage)
 
 class CardRegPage(tk.Frame):
 
@@ -151,14 +173,21 @@ class CardRegPage(tk.Frame):
 class AdminPage(tk.Frame):
 
     def __init__(self, parent, controller):
+
+        global lecture_data
+
         tk.Frame.__init__(self, parent)
+        lectDataLabel = tk.Label(self, textvariable = lecture_data)
         endLectButton = ttk.Button(self, text = "LÕPETA LOENG", command = lambda : controller.show_frame(LandingPage),width=40)
         addStudentButton = ttk.Button(self, text="LISA ÕPILANE", command = lambda : controller.show_frame(AddStudentPage),width=40)
         lockButton = ttk.Button(self, text="EKRAANILUKK", command = lambda : controller.show_frame(StudentPage),width=40)
 
-        endLectButton.grid(row = 0, column = 1,sticky = "nsew")
-        addStudentButton.grid(row=1, column=1,sticky = "nsew")
-        lockButton.grid(row=2, column=1,sticky = "nsew")
+        lectDataLabel.grid(row = 0, column = 1, sticky = "nsew")
+        endLectButton.grid(row = 1, column = 1,sticky = "nsew")
+        addStudentButton.grid(row=2, column=1,sticky = "nsew")
+        lockButton.grid(row=3, column=1,sticky = "nsew")
+
+
 
 class AddStudentPage(tk.Frame):
 
