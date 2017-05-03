@@ -15,7 +15,7 @@ import esteid_data as ed
 from vars import *
 
 lecturer_id = 0
-lecture_data = tk.StringVar()
+lecture_data = ""
 
 class Registrator(tk.Tk):
 
@@ -120,8 +120,11 @@ class NewLecturePage(tk.Frame):
         global lecture_data
         selected = self.lectListBox.curselection()
         selection_id = selected[0]
-        lecture_data = self.lect_list[selection_id]
+        lecture_raw = self.lect_list[selection_id]
+        lecture_data="{}\n{}\n{}".format(lecture_raw[0],lecture_raw[3], lecture_raw[2])
+
         self.controller.show_frame(AdminPage)
+        self.lectListBox.delete(0, tk.END)
 
 class CardRegPage(tk.Frame):
 
@@ -177,7 +180,7 @@ class AdminPage(tk.Frame):
         global lecture_data
 
         tk.Frame.__init__(self, parent)
-        lectDataLabel = tk.Label(self, textvariable = lecture_data)
+        lectDataLabel = tk.Label(self, text = lecture_data)
         endLectButton = ttk.Button(self, text = "LÕPETA LOENG", command = lambda : controller.show_frame(LandingPage),width=40)
         addStudentButton = ttk.Button(self, text="LISA ÕPILANE", command = lambda : controller.show_frame(AddStudentPage),width=40)
         lockButton = ttk.Button(self, text="EKRAANILUKK", command = lambda : controller.show_frame(StudentPage),width=40)
@@ -187,7 +190,15 @@ class AdminPage(tk.Frame):
         addStudentButton.grid(row=2, column=1,sticky = "nsew")
         lockButton.grid(row=3, column=1,sticky = "nsew")
 
+        self.lectDataLabel = lectDataLabel
+        self.refresh_lect_data()
 
+    def refresh_lect_data(self):
+
+        global lecture_data
+
+        self.lectDataLabel.config(text= lecture_data)
+        self.after(250,self.refresh_lect_data)
 
 class AddStudentPage(tk.Frame):
 
