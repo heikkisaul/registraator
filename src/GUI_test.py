@@ -8,9 +8,10 @@ import os
 import sys
 import time
 import datetime
+import pymysql
 
-#import rfid_data as rd
-#import esteid_data as ed
+import rfid_data as rd
+import esteid_data as ed
 from vars import *
 
 lecturer_id = 0
@@ -67,21 +68,36 @@ class NewLecturePage(tk.Frame):
         lectListScroll.config(command=lectListBox.yview)
         lectListLabel = ttk.Label(self, text="Vali loeng")
 
-        searchLectButton = ttk.Button(self, text="OTSI", command=lambda: controller.show_frame(AdminPage),width=40)
+        searchLectButton = ttk.Button(self, text="OTSI", command=self.get_lecture_list,width=40)
         selectLectButton = ttk.Button(self, text = "VALI LOENG", command = lambda : controller.show_frame(AdminPage),width=40)
         backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=40)
 
         lectListBox.grid(row=1, column=1,sticky = "nsew")
         lectListScroll.grid(row=1, column=2, sticky="nsew")
         lectListLabel.grid(row=0, column=1, sticky="nsew")
-        selectLectButton.grid(row=2, column=1, sticky="nsew")
-        selectLectButton.grid(row = 3, column = 1,sticky = "nsew")
-        backButton.grid(row=4, column=1,sticky = "nsew")
+        searchLectButton.grid(row=2, column=1, sticky="nsew")
+        selectLectButton.grid(row=3, column=1, sticky="nsew")
+        selectLectButton.grid(row = 4, column = 1,sticky = "nsew")
+        backButton.grid(row=5, column=1,sticky = "nsew")
 
     def get_lecturer_id(self):
-        global lecturer_id
         lecturer_id = ed.sc_parse(ed.get_data())[3]
-        print(lecturer_id)
+        return lecturer_id
+
+    def get_lecture_list(self):
+        global lecturer_id
+        lecturer_id = self.get_lecturer_id()
+        conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+                               db=DB_NAME)
+        cur = conn.cursor()
+        cur.execute("CALL `lect_reg_base`.`GET_TEACHER_LECTURES`({});".format(lecturer_id))
+        print(cur.description)
+
+        for row in cur:
+            print(row)
+
+        cur.close()
+        conn.close()
 
     #TODO populate list on button press by searching from 'lectures' table in DB based on lecturer ID-code (lecturer must use ID-card)
 
@@ -119,8 +135,17 @@ class CardRegPage(tk.Frame):
     def reg_card(self):
         code = self.codeEntry.get()
         rfid = self.rfidEntry.get()
-        print(code, rfid)
-        # TODO send data to DB
+
+        conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+                               db=DB_NAME)
+        cur = conn.cursor()
+        cur.execute("INSERT INTO CARD_DATA (CARD_CODE, ID_CODE) VALUES ({}, {});".format(rfid, code))
+        conn.commit()
+        print(cur.description)
+
+        cur.close()
+        conn.close()
+
         self.controller.show_frame(LandingPage)
 
 class AdminPage(tk.Frame):
@@ -176,7 +201,15 @@ class AddStudentPage(tk.Frame):
         f.write("%s; %s; %s; %s; %s\n" % (timestamp, MANUAL_REG, id_code, fname.upper(),lname.upper()))
         f.close()
 
-        #TODO add lecture visit to DB
+        # conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+        #                        db=DB_NAME)
+        # cur = conn.cursor()
+        # cur.execute("INSERT INTO CARD_DATA (CARD_CODE, ID_CODE) VALUES ({}, {});".format(rfid, code))
+        # conn.commit()
+        # print(cur.description)
+        #
+        # cur.close()
+        # conn.close()
 
 class StudentPage(tk.Frame):
 
@@ -190,10 +223,12 @@ class StudentPage(tk.Frame):
         infoLabel = tk.Label(self, width=40, height=5)
         infoLabel.grid(row=1, column=0,sticky = "nsew")
 
-        startButton = ttk.Button(self, text="ALUSTA",width=40)#,command=self.start_cardlistener)
+        startButton = ttk.Button(self, text="ALUSTA",width=40,command=self.start_cardlistener)
         startButton.grid(row=2, column=0,sticky = "nsew")
 
         self.infoLabel = infoLabel
+        self.controller = controller
+        self.startButton = startButton
 
     def show_confirmation(self):
         self.infoLabel.config(background='lightgreen')
@@ -205,6 +240,9 @@ class StudentPage(tk.Frame):
 
 
     def start_cardlistener(self):
+
+        self.startButton.config(state='disabled')
+
         q = Queue()
 
         self.p1 = Process(target=self.rfid_multiprocessing, args=(self.queue,))
@@ -227,9 +265,11 @@ class StudentPage(tk.Frame):
                 self.queue_val = queue_val
                 self.infoLabel.config(text=self.queue_val)
                 self.show_confirmation()
+                self.stop_register()
 
             except:
-                print("error")
+                pass
+                #print("error")
             self.after(100, func=self.show_info)
             return
         else:
@@ -237,9 +277,12 @@ class StudentPage(tk.Frame):
 
     def stop_register(self):
         global lecturer_id
+
         if self.queue_val == lecturer_id:
-            print("equality!")
-        #TODO stop student page, go back to admin page
+            self.p1.terminate()
+            self.p2.terminate()
+            self.controller.show_frame(AdminPage)
+            self.startButton.config(state='normal')
 
     def rfid_multiprocessing(self, queue):
 
