@@ -86,7 +86,7 @@ class NewLecturePage(tk.Frame):
         self.controller = controller
 
     def get_lecturer_id(self):
-        lecturer_id = ed.sc_parse(ed.get_data())[3]
+        lecturer_id = ed.sc_parse(ed.get_data())[0][3]
         return lecturer_id
 
     def get_lecture_list(self):
@@ -250,7 +250,7 @@ class AddStudentPage(tk.Frame):
         conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
                                db=DB_NAME)
         cur = conn.cursor()
-        print("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ({}, {}, {});".format(id_code, lecture_id, timestamp.strftime('\'%Y-%m-%d %H:%M:%S\'')))
+
         cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ({}, {}, {});".format(id_code, lecture_id, timestamp.strftime('\'%Y-%m-%d %H:%M:%S\'')))
         conn.commit()
         print(cur.description)
@@ -334,7 +334,7 @@ class StudentPage(tk.Frame):
     def rfid_multiprocessing(self, queue):
 
         while True:
-            result = rd.test_commit()
+            result = rd.test_commit(lecture_id)
             try:
                 pass
                 queue.put(result[RFID_SERIALNO])
@@ -345,7 +345,7 @@ class StudentPage(tk.Frame):
     def scard_multiprocessing(self, queue):
 
         while True:
-            result = ed.sc_test_commit()
+            result = ed.sc_test_commit(lecture_id)
 
             try:
                 pass

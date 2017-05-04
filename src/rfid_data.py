@@ -69,12 +69,13 @@ def parse(rfid_raw):
         rfid_raw.pop()
         rfid_raw = ''.join(rfid_raw)
         data_list.append(rfid_raw)
-        timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
-        data_list.append(timestamp)
-        return data_list
+        timestamp = datetime.datetime.now()
+        str_timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(timestamp)
+        data_list.append(str_timestamp)
+        return (data_list, timestamp)
     else:
         running = False
-        #exit()
+        return (None,None)
 
 def write_to_file(rfid_parsed):
     f = open('data.log', 'a+')
@@ -87,13 +88,14 @@ def write_to_file(rfid_parsed):
 
 
 
-def commit_data(rfid_parsed):
+def commit_data(rfid_parsed, ts, lect_id):
     write_to_file(rfid_parsed)
-    #send_to_db(rfid_parsed)
+    #send_to_db(rfid_parsed, ts, lect_id)
 
-def test_commit():
-    result = parse(mainhook())
-    commit_data(result)
+def test_commit(lect_id):
+    print(lect_id)
+    result,ts = parse(mainhook())
+    commit_data(result, ts, lect_id)
     return result
 
 

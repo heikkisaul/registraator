@@ -3,7 +3,7 @@
 #import sys
 import subprocess
 import datetime
-#import pymysql
+import pymysql
 from vars import *
 import os
 import signal
@@ -37,21 +37,28 @@ def sc_parse(eidenv_raw):
         data_list.append(raw_line)
     timestamp = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
     data_list.append(timestamp)
-    return data_list
+    return (data_list, timestamp)
 
-def sc_commit_data(eidenv_parsed):
+def sc_commit_data(eidenv_parsed, ts, lect_id):
     sc_write_to_file(eidenv_parsed)
-    #send_to_db(eidenv_parsed)
+    sc_send_to_db(eidenv_parsed, ts, lect_id)
+    # print(eidenv_parsed, ts, lect_id)
 
-def sc_send_to_db(eidenv_parsed):
-    db = pymysql.connect(DB_ADDR, DB_USR, DB_PWD, DB_NAME)
+def sc_send_to_db(eidenv_parsed, ts, lect_id):
 
-    cursor = db.cursor()
+    conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+                           db=DB_NAME)
+    cur = conn.cursor()
 
-    cursor.execute("INSERT INTO STUDENTS(FIRST_NAME, LAST_NAME, ID_CODE) VALUES ("+eidenv_parsed[0]+", "+eidenv_parsed[1]+", "+eidenv_parsed[2]+")")
-    db.commit()
 
-    db.close()
+
+    cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ("+str(eidenv_parsed[3])+", "+str(lect_id)+", \'"+str(ts)+"\')")
+    conn.commit()
+    print(cur.description)
+
+    cur.close()
+    conn.close()
+
 
 def sc_write_to_file(eidenv_parsed):
     f = open('data.log', 'a+')
@@ -60,10 +67,10 @@ def sc_write_to_file(eidenv_parsed):
 
     f.close()
 
-def sc_test_commit():
+def sc_test_commit(lect_id):
     try:
-        result = sc_parse(get_data())
-        sc_commit_data(result)
+        result, ts = sc_parse(get_data())
+        sc_commit_data(result, ts, lect_id)
         return result
     except:
         return None
