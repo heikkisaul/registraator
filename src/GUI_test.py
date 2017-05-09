@@ -134,13 +134,9 @@ class CardRegPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
-        fnameEntry = ttk.Entry(self)
-        lnameEntry = ttk.Entry(self)
         codeEntry = ttk.Entry(self)
         rfidEntry = ttk.Entry(self)
 
-        fnameLabel = ttk.Label(self, text="Eesnimi")
-        lnameLabel = ttk.Label(self, text="Perekonnanimi")
         codeLabel = ttk.Label(self, text="Isikukood")
         rfidLabel = ttk.Label(self, text="Kaardikood")
 

@@ -86,11 +86,22 @@ def write_to_file(rfid_parsed):
     except:
         f.close()
 
+def send_to_db(rfid_parsed, ts, lect_id):
+    conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+                           db=DB_NAME)
+    cur = conn.cursor()
 
+    cur.execute("CALL `lect_reg_base`.`new_procedure`(" + str(rfid_parsed[RFID_SERIALNO]) + ", " + str(lect_id) + ", \'" + str(ts) + "\')")
+
+    conn.commit()
+    print(cur.description)
+
+    cur.close()
+    conn.close()
 
 def commit_data(rfid_parsed, ts, lect_id):
     write_to_file(rfid_parsed)
-    #send_to_db(rfid_parsed, ts, lect_id)
+    send_to_db(rfid_parsed, ts, lect_id)
 
 def test_commit(lect_id):
     print(lect_id)
