@@ -50,9 +50,8 @@ def sc_send_to_db(eidenv_parsed, ts, lect_id):
                            db=DB_NAME)
     cur = conn.cursor()
 
-
-
-    cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ("+str(eidenv_parsed[3])+", "+str(lect_id)+", \'"+str(ts)+"\')")
+    cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ("+str(eidenv_parsed[3])+", "
+                +str(lect_id)+", \'"+str(ts)+"\')")
     conn.commit()
     print(cur.description)
 

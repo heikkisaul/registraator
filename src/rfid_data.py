@@ -93,7 +93,6 @@ def send_to_db(rfid_parsed, ts, lect_id):
                            db=DB_NAME)
     cur = conn.cursor()
     try:
-        print(("CALL `lect_reg_base`.`INSERT_LECTURE_VISIT_RFID`(" + str(rfid_parsed[RFID_SERIALNO]) + ", " + str(lect_id) + ", \'" + str(ts) + "\')"))
         cur.execute("CALL `lect_reg_base`.`INSERT_LECTURE_VISIT_RFID`(" + str(rfid_parsed[RFID_SERIALNO]) + ", " + str(lect_id) + ", \'" + str(ts) + "\')")
 
         conn.commit()
