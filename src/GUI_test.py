@@ -1,3 +1,4 @@
+#!/usr/bin/python3.4
 import tkinter as tk
 from tkinter import ttk
 
@@ -45,19 +46,22 @@ class Registrator(tk.Tk):
         frame = self.frames[cont]
         frame.tkraise()
 
+
 class LandingPage(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         newLectButton = ttk.Button(self, text = "UUS LOENG", command = lambda : controller.show_frame(NewLecturePage),width=40)
         addCardButton = ttk.Button(self, text="REGISTREERI KAART", command = lambda : controller.show_frame(CardRegPage),width=40)
-        closeButton = ttk.Button(self, text="SULGE",width=40)
+        closeButton = ttk.Button(self, text="SULGE", command = self.shut_down, width=40)
 
         newLectButton.grid(row = 0, column = 1,sticky = "nsew")
         addCardButton.grid(row=1, column=1,sticky = "nsew")
         closeButton.grid(row=2, column=1,sticky = "nsew")
 
-    #TODO make close button shut Raspi down
+    def shut_down(self):
+        os.system("shutdown now")
+
 
 class NewLecturePage(tk.Frame):
 
@@ -70,7 +74,7 @@ class NewLecturePage(tk.Frame):
         lectListScroll.config(command=lectListBox.yview)
         lectListLabel = ttk.Label(self, text="Vali loeng")
 
-        searchLectButton = ttk.Button(self, text="OTSI", command=self.get_lecture_list,width=37)
+        searchLectButton = ttk.Button(self, text="OTSI LOENGUID", command=self.get_lecture_list,width=37)
         selectLectButton = ttk.Button(self, text = "VALI LOENG", command = self.get_selected_lecture,width=37)
         backButton = ttk.Button(self, text="TAGASI", command = lambda : controller.show_frame(LandingPage),width=37)
 
@@ -82,40 +86,57 @@ class NewLecturePage(tk.Frame):
         selectLectButton.grid(row = 4, column = 1,sticky = "nsew")
         backButton.grid(row=5, column=1,sticky = "nsew")
 
+        selectLectButton.config(state='disabled')
+
         self.lectListBox = lectListBox
         self.controller = controller
+        self.selectLectButton = selectLectButton
 
     def get_lecturer_id(self):
-        lecturer_id = ed.sc_parse(ed.get_data())[0][3]
-        return lecturer_id
+        try:
+            lecturer_id = ed.sc_parse(ed.get_data())[0][3]
+            return lecturer_id
+        except:
+            return None
+
 
     def get_lecture_list(self):
         global lecturer_id
         lect_list=[]
+        self.lectListBox.delete(0,tk.END)
         lecturer_id = self.get_lecturer_id()
-        conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
-                               db=DB_NAME)
-        cur = conn.cursor()
-        cur.execute("CALL `lect_reg_base`.`GET_TEACHER_LECTURES`({});".format(lecturer_id))
-        print(cur.description)
+        try:
+            conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+                                   db=DB_NAME)
+            cur = conn.cursor()
+            cur.execute("CALL `lect_reg_base`.`GET_TEACHER_LECTURES`({});".format(lecturer_id))
+            #print(cur.description)
 
-        ctr=0
+            ctr=0
 
-        for row in cur:
-            lect_list.append(row)
+            for row in cur:
+                lect_list.append(row)
 
 
-        for row in lect_list:
-            p_row = (row[0], row[1], row[3])
+            for row in lect_list:
+                p_row = (row[0], row[1], row[3])
 
-            self.lectListBox.insert(ctr, p_row)
-            ctr+=1
+                self.lectListBox.insert(ctr, p_row)
+                ctr+=1
 
-        cur.close()
-        conn.close()
+            cur.close()
+            conn.close()
+            self.selectLectButton.config(state='enabled')
+        except:
+            lect_list = ["Kontrolli internetiühendust ja taaskäivita SSH tunnel"]
+            print(lect_list)
+            self.lectListBox.insert(0, "Loenguid ei leitud.")
+            self.lectListBox.insert(1,"Sisesta ID-kaart ning")
+            self.lectListBox.insert(2,"kontrolli internetiühendust ja")
+            self.lectListBox.insert(3, "taaskäivita SSH tunnel.")
+            self.selectLectButton.config(state='disabled')
 
         self.lect_list = lect_list
-
 
     def get_selected_lecture(self):
         global lecture_data
@@ -128,6 +149,8 @@ class NewLecturePage(tk.Frame):
 
         self.controller.show_frame(AdminPage)
         self.lectListBox.delete(0, tk.END)
+        self.selectLectButton.config(state='disabled')
+
 
 class CardRegPage(tk.Frame):
 
@@ -172,6 +195,7 @@ class CardRegPage(tk.Frame):
 
         self.controller.show_frame(LandingPage)
 
+
 class AdminPage(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -198,6 +222,7 @@ class AdminPage(tk.Frame):
 
         self.lectDataLabel.config(text= lecture_data)
         self.after(250,self.refresh_lect_data)
+
 
 class AddStudentPage(tk.Frame):
 
@@ -253,6 +278,7 @@ class AddStudentPage(tk.Frame):
 
         cur.close()
         conn.close()
+
 
 class StudentPage(tk.Frame):
 
@@ -349,6 +375,7 @@ class StudentPage(tk.Frame):
 
             except:
                 pass
+
 
 q = Queue()
 
