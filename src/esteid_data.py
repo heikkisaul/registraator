@@ -7,11 +7,14 @@ import pymysql
 from vars import *
 import os
 import signal
+
 g_data_list=[]
+
 
 
 #reload(sys)
 #sys.setdefaultencoding('utf-8')
+
 
 
 # After being called, waits for card insertion. When a proper card is inserted, reads the data on the card chip
@@ -40,9 +43,12 @@ def sc_parse(eidenv_raw):
     return (data_list, timestamp)
 
 def sc_commit_data(eidenv_parsed, ts, lect_id):
+
+    eidenv_prev = eidenv_parsed
     sc_write_to_file(eidenv_parsed)
     sc_send_to_db(eidenv_parsed, ts, lect_id)
-    # print(eidenv_parsed, ts, lect_id)
+
+
 
 def sc_send_to_db(eidenv_parsed, ts, lect_id):
 

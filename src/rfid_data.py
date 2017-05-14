@@ -6,6 +6,7 @@ import datetime
 from vars import *
 
 serial_no = []
+prev_result = None
 
 # This function is called every time a key is presssed
 def kbevent(event):
@@ -45,13 +46,8 @@ def mainhook():
     # Close the listener when we are done
     hookman.cancel()
     print(serial_no)
-    # if serial_no == []:
-    #     return ["1","2","3","4","5","6","7","8","9","0","Return"]
-    # else:
-    #     return serial_no
-    return serial_no
 
-#TODO print to file and send to DB functions (DB dummy)
+    return serial_no
 
 def rfid_check(rfid_raw):
     if len(rfid_raw)==11 and rfid_raw[-1]=="Return":
@@ -110,16 +106,9 @@ def commit_data(rfid_parsed, ts, lect_id):
     write_to_file(rfid_parsed)
     send_to_db(rfid_parsed, ts, lect_id)
 
+
 def test_commit(lect_id):
-    print(lect_id)
+
     result,ts = parse(mainhook())
     commit_data(result, ts, lect_id)
     return result
-
-
-if __name__=="__main__":
-
-    test_serial = ["1","2","3","4","5","6","7","8","9","0","0","Return"]
-
-    test_commit()
-
