@@ -179,21 +179,21 @@ class CardRegPage(tk.Frame):
         self.rfidEntry = rfidEntry
         self.controller = controller
 
-    def reg_card(self):
-        code = self.codeEntry.get()
-        rfid = self.rfidEntry.get()
-
-        conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
-                               db=DB_NAME)
-        cur = conn.cursor()
-        cur.execute("INSERT INTO CARD_DATA (CARD_CODE, ID_CODE) VALUES ({}, {});".format(rfid, code))
-        conn.commit()
-        print(cur.description)
-
-        cur.close()
-        conn.close()
-
-        self.controller.show_frame(LandingPage)
+    # def reg_card(self):
+    #     code = self.codeEntry.get()
+    #     rfid = self.rfidEntry.get()
+    #
+    #     conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+    #                            db=DB_NAME)
+    #     cur = conn.cursor()
+    #     cur.execute("INSERT INTO CARD_DATA (CARD_CODE, ID_CODE) VALUES ({}, {});".format(rfid, code))
+    #     conn.commit()
+    #     print(cur.description)
+    #
+    #     cur.close()
+    #     conn.close()
+    #
+    #     self.controller.show_frame(LandingPage)
 
 
 class AdminPage(tk.Frame):
@@ -264,20 +264,20 @@ class AddStudentPage(tk.Frame):
         timestamp = datetime.datetime.now()
         str_timestamp = '%Y-%m-%d %H:%M:%S'.format(timestamp)
 
-        f = open('data.log', 'a+')
-        f.write("%s; %s; %s; %s; %s\n" % (str_timestamp, MANUAL_REG, id_code, fname.upper(),lname.upper()))
-        f.close()
-
-        conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
-                               db=DB_NAME)
-        cur = conn.cursor()
-
-        cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ({}, {}, {});".format(id_code, lecture_id, timestamp.strftime('\'%Y-%m-%d %H:%M:%S\'')))
-        conn.commit()
-        print(cur.description)
-
-        cur.close()
-        conn.close()
+        # f = open('data.log', 'a+')
+        # f.write("%s; %s; %s; %s; %s\n" % (str_timestamp, MANUAL_REG, id_code, fname.upper(),lname.upper()))
+        # f.close()
+        #
+        # conn = pymysql.connect(host='127.0.0.1', port=9990, user=DB_USR, passwd=DB_PWD,
+        #                        db=DB_NAME)
+        # cur = conn.cursor()
+        #
+        # cur.execute("INSERT INTO LECTURE_VISIT (ID_CODE, LECTURE_ID, REG_TIMESTAMP) VALUES ({}, {}, {});".format(id_code, lecture_id, timestamp.strftime('\'%Y-%m-%d %H:%M:%S\'')))
+        # conn.commit()
+        # print(cur.description)
+        #
+        # cur.close()
+        # conn.close()
 
 
 class StudentPage(tk.Frame):

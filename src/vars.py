@@ -3,8 +3,8 @@ List of variables required by different parts of the program
 """
 # Variables for MySQL database
 DB_ADDR = "ims.ut.ee"
-DB_USR = "lrb_admin"
-DB_PWD = "oiurfmneroejf5v9"
+DB_USR = "lrb_bot"
+DB_PWD = "2aPFezt8vqVREF4J"
 DB_NAME = "lect_reg_base"
 
 # Variables for parsed EID data
